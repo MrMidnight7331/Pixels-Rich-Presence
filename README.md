@@ -109,7 +109,7 @@ Feel free ho contact me on my socials if you face any problem or need help with 
 - [LinkTree: MrMidnight53](https://linktr.ee/MrMidnight53)
 
 ## **Donate**
-If you think I did a good job feel free to donate here to help me create OpenSource Projects (Money doesn't grow on OpenSource Projects):
+If you think I did a good job feel free to donate here, to help me create more OpenSource Projects (Money doesn't grow on OpenSource Projects):
 
 ETH: 0x939A9353e1a72e5d6Da07424c74815a6651a86f4
 
