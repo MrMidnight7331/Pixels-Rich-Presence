@@ -1,0 +1,41 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5dc; /* Light beige for a warm background */
+    color: #2e4c2a; /* Dark green text */
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    padding: 20px;
+    text-align: center;
+}
+
+h2 {
+    color: #2e4c2a; /* Dark green */
+}
+
+button {
+    background-color: #4caf50; /* Green */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin-top: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+button:hover {
+    background-color: #3e8e41; /* Darker green on hover */
+}
+
+#downloadLink {
+    display: block;
+    color: #8b4513; /* SaddleBrown */
+    text-decoration: none;
+    margin-top: 10px;
+}
+
+#downloadLink:hover {
+    text-decoration: underline;
+}

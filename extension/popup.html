@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pixels Rich Presence</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+<div class="container">
+    <h2>Pixels Rich Presence</h2>
+    <p id="status">Checking for server connection...</p>
+    <div id="downloadSection" style="display: none;">
+        <p>Is the server installed?</p>
+        <a id="downloadLink" href="https://your-download-link.com">Download Server Installer</a>
+        <button id="verifyButton">Verify Installation</button>
+    </div>
+
+    <div id="toggleSection">
+        <label for="presenceToggle">Share my location on Discord:</label>
+        <input type="checkbox" id="presenceToggle">
+    </div>
+</div>
+<script src="popup.js"></script>
+</body>
+</html>

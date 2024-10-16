@@ -1,0 +1,36 @@
+# Ignore node_modules for both root and server
+node_modules/
+server/node_modules/
+
+# Ignore build output (dist or win-unpacked folder if applicable)
+dist/
+win-unpacked/
+server/dist/
+server/win-unpacked/
+
+# Ignore log files
+*.log
+
+# Ignore lock files (optional, if you don't want to track them)
+package-lock.json
+server/package-lock.json
+
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
+
+# Ignore any temporary or hidden system files
+*.swp
+*~
+.vscode/
+
+# Ignore Electron build and cache files
+electron-builder-cache/
+.cache/
+
+# Ignore compiled and output files (if you are generating executables, DMGs, etc.)
+*.exe
+*.dmg
+*.app
+*.deb
+*.rpm

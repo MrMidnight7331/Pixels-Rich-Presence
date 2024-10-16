@@ -1,0 +1,33 @@
+{
+  "name": "pixels-rpc-server",
+  "version": "1.0.0",
+  "description": "Discord-rpc for Pixels Online",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder"
+  },
+  "devDependencies": {
+    "electron": "^25.0.0",
+    "electron-builder": "^25.1.8"
+  },
+  "dependencies": {
+    "discord-rpc": "^4.0.1",
+    "ws": "^8.18.0"
+  },
+  "build": {
+    "appId": "com.mrmidnight.pixelsrichpresence",
+    "productName": "Pixels Rich Presence",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "src/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": "portable",
+      "icon": "public/prpc-logo.ico"
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "Pixels Map Capturer",
+  "version": "1.0",
+  "permissions": ["scripting", "storage", "identity"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://play.pixels.xyz/*"],
+      "js": ["contentScript.js"]
+    }
+  ],
+  "web_accessible_resources": [{
+    "resources": ["injectedScript.js"],
+    "matches": ["https://play.pixels.xyz/*"]
+  }],
+  "action": {
+    "default_popup": "popup.html"
+  }
+}
