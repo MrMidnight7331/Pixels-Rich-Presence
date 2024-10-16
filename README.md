@@ -68,6 +68,11 @@ npm install
 2. Create a new application and enable Rich Presence.
 3. Copy your Client ID and update the code in discord.js to use your own clientId.
 
+### **Step 5: Add the Chrome Extension**
+1. Go to chrome://extensions
+2. Turn on developer mode
+3. Drag n drop the crx file into the window or load unpacked to install the extension
+
 ### **Running the App for Development**
 You can run the app in development mode to test its functionality.
 
