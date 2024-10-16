@@ -101,5 +101,27 @@ Once the application is running:
   - server.js: Handles WebSocket connections and passes map updates to the Discord presence manager.
   - package.json: Manages dependencies and build configurations for the Electron app.
 
+## **Contact**
+Feel free ho contact me on my socials if you face any problem or need help with tbe setup process!
+
+- [Twitter: @MrMidnight53](https://twitter.com/MrMidnight53)
+- [Instagram: mrmidnight7331](https://www.instagram.com/mrmidnight7331)
+- [LinkTree: MrMidnight53](https://linktr.ee/MrMidnight53)
+
+## **Donate**
+If you think I did a good job feel free to donate here to help me create OpenSource Projects (Money doesn't grow on OpenSource Projects):
+
+ETH: 0x939A9353e1a72e5d6Da07424c74815a6651a86f4
+
+MATIC: 0x939A9353e1a72e5d6Da07424c74815a6651a86f4
+
+SOLANA: HsNpPDGhDsmq4j1PBTDuMx67svj6446m8aUWGSpjGCjk
+
+BTC: bc1q55kfd0elssc9u3ha86gw4ea9w3l5cw7ch58hce
+
+Or buy me a coffee here:
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/S6S7NRQSG)
+
 ## **License**
   This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
