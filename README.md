@@ -1,20 +1,30 @@
 # **Pixels Rich Presence**
-> Version 1.0.0
+> Version 1.0.1
 
 **Pixels Rich Presence** is an Electron-based application that allows users to display real-time information about their activities in the *Pixels Game* on their Discord profile. The app integrates with Discord Rich Presence to show specific map locations, events, and in-game actions such as warping, farming, and exploring.
 
 ## **Table of Contents**
-1. [Features](#features)
-2. [User Installation](#user-installation)
-3. [Developer Setup](#developer-setup)
-4. [Running the App](#running-the-app)
-5. [Usage](#usage)
-6. [Building the App](#building-the-app)
-7. [Code Structure](#code-structure)
-8. [Contributing](#contributing)
-9. [License](#license)
+1. [Disclaimer](#disclaimer)
+2. [Features](#features)
+3. [Changelog](#changelog)
+4. [User Installation](#user-installation)
+5. [Developer Setup](#developer-setup)
+6. [Running the App](#running-the-app)
+7. [Usage](#usage)
+8. [Building the App](#building-the-app)
+9. [Code Structure](#code-structure)
+10. [Contributing](#contributing)
+11. [License](#license)
 
 ---
+## **DISCLAIMER**
+
+This software, Pixels Rich Presence, is an unofficial third party application and is in no way associated with, endorsed by, or affiliated with Pixels Online, Banger, Inc., or Pixels.
+
+It has been independently developed by the developer and contributors to enhance the user experience by integrating game activity with Discord Rich Presence. Any logos, trademarks, or names associated with Pixels or Banger, Inc. used in this project are the property of their respective owners and are used here solely for descriptive purposes.
+
+The use of this software is at your own risk. By using it, you acknowledge that this project is not officially supported by Banger, Inc. or Pixels, and they are not responsible for any issues or damages that may arise from its use.
+
 
 ## **Features**
 - Real-time Discord Rich Presence integration with the *Pixels Game*.
@@ -23,13 +33,25 @@
 - Cross-platform support for Windows and macOS.
 - Electron-based app with a user-friendly setup and configuration.
 
+## **Changelog**
+- V.1.0.0
+  - Initial Release
+  - Added Discord Rich Presence Integration to Pixels.xyz
+  - Added Custom Map Descriptions
+  - Added Auto Clear Presence on Game Close
+- V.1.0.1
+  - Added taskbar icon for Windows
+  - Improved stability and performance
+  - Added Installer
+  - Start on boot
+
 ## **User Installation**
 If you're a user and just want to use the app, follow these simple steps:
 
 1. **Chrome Extension**: Go to the [Chrome Web Store](https://chrome.google.com/webstore) and search for "Pixels Rich Presence" or download it directly using [this link](https://your-link-to-chrome-store).
 
 2. **Server Application**: Download the server application for your platform:
-    - **Windows**: [Download for Windows](https://your-link-to-windows-exe)
+    - **Windows**: [Download for Windows](https://github.com/MrMidnight7331/Pixels-Rich-Presence/releases)
 
 Once installed, the app will automatically integrate with Discord and update your status when playing *Pixels Online*.
 

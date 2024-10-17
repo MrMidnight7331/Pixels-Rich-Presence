@@ -24,25 +24,11 @@
     },
     "files": [
       "src/**/*",
-      "package.json",
-      "public/prpc-logo.ico"
+      "package.json"
     ],
     "win": {
-      "target": [
-        "nsis",
-        "portable"
-      ],
+      "target": "portable",
       "icon": "public/prpc-logo.ico"
-    },
-    "nsis": {
-      "oneClick": false,
-      "allowElevation": true,
-      "allowToChangeInstallationDirectory": true,
-      "createDesktopShortcut": true,
-      "createStartMenuShortcut": true,
-      "runAfterFinish": true,
-      "include": "installer.nsh"
-
     }
   }
 }

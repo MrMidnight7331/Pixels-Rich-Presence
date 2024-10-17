@@ -1,9 +1,9 @@
 const wordlist = {
     terravilla: "Chilling in Terra Villa",
-    generalStore: "Buying stuff in Bucks Galore",
+    generalStore: "Buying stuff in Buck's Galore",
     SaunaInterior: "Recovering energy in the Sauna",
     PLOTInterior: "Warping with the Infiniportal",
-    PostOfficeInterior: "Claiming packages at the Post Fffice",
+    PostOfficeInterior: "Claiming packages at the Post Office",
     MOIinterior: "Innovating stuff at MOI",
     DrunkenGooseInterior: "Getting drunk at the Drunken Goose",
     TerravillaPier: "Enjoying the sun on the Beach",
@@ -14,9 +14,9 @@ const wordlist = {
     carnival: "Having fun at the Carnival",
     barneyblitz: "Exploring Barney's Bazaarn",
     gachahub: "Forgot to redeem a Claim",
-    petsInterior: "Buying stuff for pets",
+    petsInterior: "Buying snacks for Pets",
     TerravillaEastCrossroads: "Entering THE ROAD",
-    superbowl: "Entering the Sootball Stadium"
+    superbowl: "Entering the Football Stadium"
 };
 
 

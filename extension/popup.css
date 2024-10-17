@@ -31,11 +31,12 @@ button:hover {
 
 #downloadLink {
     display: block;
-    color: #8b4513; /* SaddleBrown */
+    color: #6abe00; /* SaddleBrown */
     text-decoration: none;
     margin-top: 10px;
 }
 
 #downloadLink:hover {
     text-decoration: underline;
+    color: #2e4c2a;
 }
