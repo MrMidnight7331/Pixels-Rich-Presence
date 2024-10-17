@@ -8,7 +8,7 @@
     "48": "icons/prpc-logo.png",
     "128": "icons/prpc-logo.png"
   },
-  "permissions": ["scripting", "storage", "identity"],
+  "permissions": ["scripting", "storage"],
   "background": {
     "service_worker": "background.js"
   },
