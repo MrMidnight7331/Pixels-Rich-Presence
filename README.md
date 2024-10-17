@@ -3,18 +3,20 @@
 
 **Pixels Rich Presence** is an Electron-based application that allows users to display real-time information about their activities in the *Pixels Game* on their Discord profile. The app integrates with Discord Rich Presence to show specific map locations, events, and in-game actions such as warping, farming, and exploring.
 
-## **Table of Contents**
-1. [Disclaimer](#disclaimer)
-2. [Features](#features)
-3. [Changelog](#changelog)
-4. [User Installation](#user-installation)
-5. [Developer Setup](#developer-setup)
-6. [Running the App](#running-the-app)
-7. [Usage](#usage)
-8. [Building the App](#building-the-app)
-9. [Code Structure](#code-structure)
-10. [Contributing](#contributing)
-11. [License](#license)
+<div align="center"><strong>Table of Contents</strong></div>
+<ol align="center">
+  <li><a href="#disclaimer">Disclaimer</a></li>
+  <li><a href="#features">Features</a></li>
+  <li><a href="#changelog">Changelog</a></li>
+  <li><a href="#user-installation">User Installation</a></li>
+  <li><a href="#developer-setup">Developer Setup</a></li>
+  <li><a href="#running-the-app">Running the App</a></li>
+  <li><a href="#usage">Usage</a></li>
+  <li><a href="#building-the-app">Building the App</a></li>
+  <li><a href="#code-structure">Code Structure</a></li>
+  <li><a href="#contributing">Contributing</a></li>
+  <li><a href="#license">License</a></li>
+</ol>
 
 ---
 ## **DISCLAIMER**
