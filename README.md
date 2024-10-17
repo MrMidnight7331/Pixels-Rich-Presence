@@ -30,7 +30,9 @@ It has been independently developed by the developer and contributors to enhance
 
 The use of this software is at your own risk. By using it, you acknowledge that this project is not officially supported by Banger, Inc. or Pixels, and they are not responsible for any issues or damages that may arise from its use.
 
-
+By committing to this repository, you agree to the terms and conditions outlined in the [LICENSE](LICENSE) file and to agree to the terms of conditions by Pixels Online: [Pixels Developer Rules & Guidelines
+](https://docs.google.com/document/d/1A5RF31Oeu0lixM8zj165_0UClVs3LvDGpo9Tney-WIw/edit?tab=t.0#heading=h.cp8iiejgbvpz)
+ 
 ## **Features**
 - Real-time Discord Rich Presence integration with the *Pixels Game*.
 - Custom map descriptions displayed based on the user’s in-game location.
