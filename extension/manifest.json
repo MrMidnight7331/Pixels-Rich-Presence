@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Pixels Rich Presence",
-  "version": "1.0",
-  "description": "Integrating Pixels Online into Discord-RPC",
+  "version": "1.0.1",
+  "description": "Integrating Pixels Online into Discord Rich Presence",
   "icons": {
     "16": "icons/prpc-logo.png",
     "48": "icons/prpc-logo.png",
