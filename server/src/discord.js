@@ -45,9 +45,14 @@ function updateDiscordPresence(mapOrBuildingName) {
 }
 
 function clearDiscordPresence() {
-    client.clearActivity().catch((error) => {
-        logError(`Failed to clear Discord presence: ${error.message}`);
-    });
+    client.clearActivity()
+        .then(() => {
+            console.log('[DEBUG] Discord presence cleared.');
+            startTime = null; // Reset the timer
+        })
+        .catch((error) => {
+            logError(`Failed to clear Discord presence: ${error.message}`);
+        });
 }
 
 module.exports = { updateDiscordPresence, clearDiscordPresence };
