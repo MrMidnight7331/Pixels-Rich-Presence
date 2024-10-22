@@ -40,17 +40,19 @@ By committing to this repository, you agree to the terms and conditions outlined
 - Cross-platform support for Windows and macOS.
 - Electron-based app with a user-friendly setup and configuration.
 
+  
 ## **Changelog**
-- V.1.0.0
-  - Initial Release
-  - Added Discord Rich Presence Integration to Pixels.xyz
-  - Added Custom Map Descriptions
-  - Added Auto Clear Presence on Game Close
 - V.1.0.1
   - Added taskbar icon for Windows
   - Improved stability and performance
   - Added Installer
   - Start on boot
+
+- V.1.0.0
+  - Initial Release
+  - Added Discord Rich Presence Integration to Pixels.xyz
+  - Added Custom Map Descriptions
+  - Added Auto Clear Presence on Game Close
 
 ## **User Installation**
 If you're a user and just want to use the app, follow these simple steps:
