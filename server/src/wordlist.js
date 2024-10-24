@@ -3,7 +3,7 @@ const path = require('path');
 
 // Load the wordlist from the JSON file
 let wordlist;
-const wordlistPath = path.join(__dirname, '../wordlist.json');
+const wordlistPath = path.join(__dirname, './wordlist.json');
 
 try {
     const data = fs.readFileSync(wordlistPath, 'utf8');
