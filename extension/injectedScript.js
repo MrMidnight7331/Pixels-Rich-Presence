@@ -1,89 +1,107 @@
-(function() {
+(function () {
     const originalConsoleLog = console.log;
     let lastDetectedMap = null;
-    let presenceEnabled = true;  // Default to true
+    let presenceEnabled = true; // Default to true
 
     // Create a WebSocket connection
     let socket = new WebSocket('ws://127.0.0.1:32345');
 
-    socket.onopen = function() {
-        originalConsoleLog("[DEBUG] Connected to WebSocket server from injectedScript.js.");
-        socket.send(JSON.stringify({ type: 'status', status: 'opened' }));
-    };
+    // Function to send a message via WebSocket if it's open
+    function sendToServer(payload) {
+        if (socket.readyState === WebSocket.OPEN) {
+            socket.send(JSON.stringify(payload));
+            originalConsoleLog(`[DEBUG] Sent message to server: ${JSON.stringify(payload)}`);
+        } else {
+            originalConsoleLog(`[DEBUG] WebSocket is not open. Unable to send message.`);
+        }
+    }
 
-    socket.onerror = function (error) {
-        originalConsoleLog(`[DEBUG] WebSocket Error from injectedScript.js: ${error}`);
-    };
+    // Reconnect logic for WebSocket if it closes
+    function reconnectWebSocket() {
+        socket = new WebSocket('ws://127.0.0.1:32345');
 
-    socket.onclose = function () {
-        originalConsoleLog("[DEBUG] WebSocket connection closed in injectedScript.js.");
-    };
+        socket.onopen = function () {
+            originalConsoleLog("[DEBUG] Connected to WebSocket server from injectedScript.js.");
+            sendToServer({ type: 'status', status: 'opened' });
+        };
 
-    window.addEventListener('beforeunload', function() {
+        socket.onerror = function (error) {
+            originalConsoleLog(`[DEBUG] WebSocket Error from injectedScript.js: ${error}`);
+        };
+
+        socket.onclose = function () {
+            originalConsoleLog("[DEBUG] WebSocket connection closed in injectedScript.js. Reconnecting...");
+            setTimeout(reconnectWebSocket, 5000);  // Try to reconnect after 5 seconds
+        };
+    }
+
+    // Start the WebSocket connection
+    reconnectWebSocket();
+
+    window.addEventListener('beforeunload', function () {
         if (socket.readyState === WebSocket.OPEN) {
             originalConsoleLog("[DEBUG] Sending 'closed' status before window unload.");
-            socket.send(JSON.stringify({ type: 'status', status: 'closed' }));
+            sendToServer({ type: 'status', status: 'closed' });
         }
     });
 
     // Listen for toggle update and website status from content script (via postMessage)
-    window.addEventListener('message', function(event) {
-        console.log(`[DEBUG] Received message from content script: ${JSON.stringify(event.data)}`);  // Debug log
+    window.addEventListener('message', function (event) {
+        originalConsoleLog(`[DEBUG] Received message from content script: ${JSON.stringify(event.data)}`);  // Debug log
 
         if (event.data.type === 'presenceToggle') {
             presenceEnabled = event.data.enabled;
             originalConsoleLog(`[DEBUG] Presence toggle updated: ${presenceEnabled}`);
 
             // If the presence is disabled, immediately update the Rich Presence to "Not Telling"
-            if (!presenceEnabled && socket.readyState === WebSocket.OPEN) {
+            if (!presenceEnabled) {
                 originalConsoleLog("[DEBUG] Sending 'Not Telling' update due to presence disabled.");
-                socket.send(JSON.stringify({ type: 'mapUpdate', mapOrBuildingName: "Not Telling" }));
+                sendToServer({ type: 'mapUpdate', mapOrBuildingName: 'Not Telling' });
             }
         }
 
-        if (event.data.type === 'lastMapUpdate' && presenceEnabled && socket.readyState === WebSocket.OPEN) {
+        if (event.data.type === 'lastMapUpdate' && presenceEnabled) {
             // Update the rich presence with the last known map if presence is enabled
-            const lastMapName = event.data.mapName || "Unknown Location";
+            const lastMapName = event.data.mapName || 'Unknown Location';
             originalConsoleLog(`[DEBUG] Sending map update: ${lastMapName}`);
-            socket.send(JSON.stringify({ type: 'mapUpdate', mapOrBuildingName: lastMapName }));
+            sendToServer({ type: 'mapUpdate', mapOrBuildingName: lastMapName });
         }
 
         // Handle website status
         if (event.data.type === 'websiteStatus') {
-            if (event.data.status === 'closed' && socket.readyState === WebSocket.OPEN) {
+            if (event.data.status === 'closed') {
                 originalConsoleLog("[DEBUG] Website closed, sending 'clearPresence' message.");
-                // Stop updating Discord Rich Presence and clear it when the website is closed
-                socket.send(JSON.stringify({ type: 'status', status: 'clearPresence' }));
-            } else if (event.data.status === 'opened' && socket.readyState === WebSocket.OPEN) {
+                sendToServer({ type: 'status', status: 'clearPresence' });
+            } else if (event.data.status === 'opened') {
                 originalConsoleLog("[DEBUG] Website reopened, resuming updates.");
-                socket.send(JSON.stringify({ type: 'status', status: 'opened' }));
+                sendToServer({ type: 'status', status: 'opened' });
             }
         }
     });
 
     // Override the console.log function to send map updates only when the presence is enabled
-    console.log = function(...args) {
-        const logOutput = args.join(" ");
+    console.log = function (...args) {
+        const logOutput = args.join(' ');
 
         // Detect "joining map" messages
-        if (logOutput.includes("joining map")) {
-            const mapNameMatch = logOutput.match(/joining map ([\w-]+):?/); // Updated regex
+        if (logOutput.includes('joining map')) {
+            const mapNameMatch = logOutput.match(/joining map ([\w-]+):?/);  // Updated regex
             if (mapNameMatch) {
                 const mapName = mapNameMatch[1];
 
                 // Send the map name to content script to store in chrome.storage
                 window.postMessage({ type: 'mapNameDetected', mapName: mapName }, '*');
 
-                if (mapName !== lastDetectedMap && presenceEnabled && socket.readyState === WebSocket.OPEN) {
+                if (mapName !== lastDetectedMap && presenceEnabled) {
                     lastDetectedMap = mapName;
                     originalConsoleLog(`[DEBUG] Sending map update: ${mapName}`);
-                    socket.send(JSON.stringify({ type: 'mapUpdate', mapOrBuildingName: mapName }));
+                    sendToServer({ type: 'mapUpdate', mapOrBuildingName: mapName });
                 }
             }
         }
 
         // Detect "warp to" messages (for locations like pixelsNFTFarm)
-        if (logOutput.includes("warp to")) {
+        if (logOutput.includes('warp to')) {
             const warpNameMatch = logOutput.match(/warp to ([\w-]+):?/);
             if (warpNameMatch) {
                 const warpName = warpNameMatch[1];
@@ -91,10 +109,10 @@
                 // Send the warp name to content script to store in chrome.storage
                 window.postMessage({ type: 'mapNameDetected', mapName: warpName }, '*');
 
-                if (warpName !== lastDetectedMap && presenceEnabled && socket.readyState === WebSocket.OPEN) {
+                if (warpName !== lastDetectedMap && presenceEnabled) {
                     lastDetectedMap = warpName;
                     originalConsoleLog(`[DEBUG] Sending warp update: ${warpName}`);
-                    socket.send(JSON.stringify({ type: 'mapUpdate', mapOrBuildingName: warpName }));
+                    sendToServer({ type: 'mapUpdate', mapOrBuildingName: warpName });
                 }
             }
         }

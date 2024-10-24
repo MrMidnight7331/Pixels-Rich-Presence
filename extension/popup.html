@@ -7,17 +7,27 @@
 </head>
 <body>
 <div class="container">
-    <h2>Pixels Rich Presence v.1.0.1</h2>
+    <h2>Pixels Rich Presence</h2>
     <p id="status">Checking for server connection...</p>
+
     <div id="downloadSection" style="display: none;">
         <p>Is the server installed?</p>
-        <a id="downloadLink" href="https://github.com/MrMidnight7331/Pixels-Rich-Presence/releases" target="_blank">Download Server Installer</a>
-        <button id="verifyButton">Verify Connection</button>
+        <a id="downloadLink" href="https://github.com/MrMidnight7331/Pixels-Rich-Presence/releases">Download Server Installer</a>
+        <button id="verifyButton">Verify Installation</button>
     </div>
 
     <div id="toggleSection">
         <label for="presenceToggle">Share my location on Discord:</label>
         <input type="checkbox" id="presenceToggle">
+    </div>
+    <h6></h6>
+
+    <!-- AFK Timeout Section -->
+    <div id="afkSection">
+        <label for="afkTimeout">AFK Timeout (min):</label>
+        <input type="range" id="afkTimeout" min="1" max="60" value="10"> <!-- Slider for timeout -->
+        <span id="afkValue">10</span> minutes
+        <button id="saveButton">Save</button> <!-- Save button -->
     </div>
 </div>
 <script src="popup.js"></script>

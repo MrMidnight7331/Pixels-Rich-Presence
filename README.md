@@ -42,6 +42,14 @@ By committing to this repository, you agree to the terms and conditions outlined
 
   
 ## **Changelog**
+
+- V.1.0.2
+  - Added more map descriptions
+  - Reworked map descriptions handling
+  - Added AFK status marker 
+  - Added support to change AFK marker threshold
+  - Fixed "Not Showing discord RPC" not showing between sessions
+
 - V.1.0.1
   - Added taskbar icon for Windows
   - Improved stability and performance
