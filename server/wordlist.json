@@ -1,0 +1,82 @@
+{
+  "terravilla": {
+    "name": "Terra Villa",
+    "description": "Chilling in Terra Villa"
+  },
+  "generalStore": {
+    "name": "Buck's Galore",
+    "description": "Buying stuff in Buck's Galore"
+  },
+  "SaunaInterior": {
+    "name": "Sauna",
+    "description": "Recovering energy in the Sauna"
+  },
+  "PLOTInterior": {
+    "name": "Infiniportal",
+    "description": "Warping with the Infiniportal"
+  },
+  "PostOfficeInterior": {
+    "name": "Post Office",
+    "description": "Claiming packages at the Post Office"
+  },
+  "MOIinterior": {
+    "name": "MOI",
+    "description": "Innovating stuff at MOI"
+  },
+  "DrunkenGooseInterior": {
+    "name": "Drunken Goose",
+    "description": "Getting drunk at the Drunken Goose"
+  },
+  "TerravillaPier": {
+    "name": "Terravilla Pier",
+    "description": "Enjoying the sun on the Beach"
+  },
+  "BankInterior": {
+    "name": "Bank",
+    "description": "Getting a loan at the Bank"
+  },
+  "okx": {
+    "name": "OKX",
+    "description": "We love Fokxes very much!"
+  },
+  "HQinterior": {
+    "name": "Headquarters",
+    "description": "Exploring the Headquarters"
+  },
+  "theatre": {
+    "name": "Theater",
+    "description": "Watching a play at the Theater"
+  },
+  "carnival": {
+    "name": "Carnival",
+    "description": "Having fun at the Carnival"
+  },
+  "barneyblitz": {
+    "name": "Barney's Bazaarn",
+    "description": "Exploring Barney's Bazaarn"
+  },
+  "gachahub": {
+    "name": "Gacha Hub",
+    "description": "Forgot to redeem a Claim"
+  },
+  "petsInterior": {
+    "name": "Pets Store",
+    "description": "Buying snacks for Pets"
+  },
+  "TerravillaEastCrossroads": {
+    "name": "The Road",
+    "description": "Entering THE ROAD"
+  },
+  "superbowl": {
+    "name": "Football Stadium",
+    "description": "Entering the Football Stadium"
+  },
+  "hauntedcastleinterior": {
+    "name": "Haunted Castle",
+    "description": "Being haunted in the Castle"
+  },
+    "hauntedcastle": {
+        "name": "Haunted Castle Premise",
+        "description": "In front of the Haunted Castle"
+    }
+}
