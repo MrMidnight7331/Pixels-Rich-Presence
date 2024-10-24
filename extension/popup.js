@@ -3,9 +3,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const afkTimeoutSlider = document.getElementById('afkTimeout');
     const afkValueSpan = document.getElementById('afkValue');
     const saveButton = document.getElementById('saveButton');
-
-    // WebSocket variable
-    let socket = null;
+    const statusElement = document.getElementById('status'); // Status element for server connection
+    let socket = null; // WebSocket variable
 
     // Load saved toggle state for presence and AFK timeout value
     chrome.storage.sync.get(['presenceEnabled', 'afkTimeout'], (result) => {
@@ -51,12 +50,14 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // Establish WebSocket connection and send stored info
+    // Establish WebSocket connection and update status
     function connectToServer() {
         socket = new WebSocket('ws://localhost:32345');
 
         socket.onopen = function() {
             console.log("[DEBUG] Connected to WebSocket server from popup.js.");
+            statusElement.textContent = 'Server connected.'; // Update status to "Server connected"
+            statusElement.style.color = "green"; // Change the status text to green when connected
 
             // Send stored preferences on connection
             chrome.storage.sync.get(['presenceEnabled'], (result) => {
@@ -73,10 +74,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
         socket.onerror = function (error) {
             console.error(`[DEBUG] WebSocket Error from popup.js: ${error}`);
+            statusElement.textContent = 'Server not found.'; // Update status to "Server not found"
+            statusElement.style.color = "red"; // Change the status text to red when there's an error
+            document.getElementById('downloadSection').style.display = 'block'; // Show the download section
         };
 
         socket.onclose = function () {
             console.log("[DEBUG] WebSocket connection closed in popup.js.");
+            statusElement.textContent = 'Server disconnected.'; // Update status to "Server disconnected"
+            statusElement.style.color = "orange"; // Change the status text to orange when disconnected
         };
     }
 
