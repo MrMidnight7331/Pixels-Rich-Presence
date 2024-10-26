@@ -51,6 +51,7 @@ By committing to this repository, you agree to the terms and conditions outlined
   - Resolved UI issues for "Checking for server connection" message
   - Added DEBUG window for the server 
   - Added retry connection button for the server
+  - Fixed persistent issues for AFK timeout
 
 - V.1.0.2
   - Added more map descriptions

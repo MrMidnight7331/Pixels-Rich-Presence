@@ -21,32 +21,21 @@ function startWebSocketServer() {
 
     wss.on('connection', (ws) => {
         console.log('WebSocket connection established.');
+        console.log(`[DEBUG] Initial AFK time: ${afkTimeout} ms`);
+
+        // Send AFK timeout to the client immediately on connection
+        ws.send(JSON.stringify({ type: 'afkTimeout', timeout: afkTimeout / 60000 }));
 
         ws.on('message', (message) => {
             console.log(`[DEBUG] Message received from client: ${message}`);
             const data = JSON.parse(message);
 
             if (data.type === 'status') {
-                if (data.status === 'notTelling') {
-                    isNotTelling = true;
-                    updateDiscordPresence("Not Telling");
-                    console.log('[DEBUG] Presence set to "Not Telling". Suppressing map updates.');
-                } else if (data.status === 'telling') {
-                    isNotTelling = false;
-                    console.log('[DEBUG] Presence set to "Telling". Resuming map updates.');
-                    lastMapName = null;  // Reset last map to allow updates
-                } else if (data.status === 'closed') {
-                    console.log('[DEBUG] Client status is closed, clearing Discord presence.');
-                    clearDiscordPresence();
-                }
+                handleStatusUpdate(data.status);
             }
 
             if (data.type === 'mapUpdate') {
-                if (isNotTelling) {
-                    console.log('[DEBUG] "Not Telling" is active. Suppressing map update.');
-                } else {
-                    handleMapUpdate(data.mapOrBuildingName);
-                }
+                handleMapUpdate(data.mapOrBuildingName);
             }
 
             if (data.type === 'afkTimeoutUpdate') {
@@ -69,6 +58,21 @@ function startWebSocketServer() {
         console.log('WebSocket server closed. Restarting...');
         startWebSocketServer();
     });
+}
+
+function handleStatusUpdate(status) {
+    if (status === 'notTelling') {
+        isNotTelling = true;
+        updateDiscordPresence("Not Telling");
+        console.log('[DEBUG] Presence set to "Not Telling". Suppressing map updates.');
+    } else if (status === 'telling') {
+        isNotTelling = false;
+        console.log('[DEBUG] Presence set to "Telling". Resuming map updates.');
+        lastMapName = null;  // Reset last map to allow updates
+    } else if (status === 'closed') {
+        console.log('[DEBUG] Client status is closed, clearing Discord presence.');
+        clearDiscordPresence();
+    }
 }
 
 function handleMapUpdate(mapOrBuildingName) {

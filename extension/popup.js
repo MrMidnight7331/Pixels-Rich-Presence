@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const afkValueSpan = document.getElementById('afkValue');
     const saveButton = document.getElementById('saveButton');
     const statusElement = document.getElementById('status');
+    const downloadSection = document.getElementById('downloadSection');
     let socket = null;
 
     // Load saved presence toggle state and AFK timeout value
@@ -15,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Update displayed AFK timeout value in real time
     afkTimeoutSlider.addEventListener('input', () => {
-        afkValueSpan.textContent = afkTimeoutSlider.value; // Update the displayed value in minutes
+        afkValueSpan.textContent = afkTimeoutSlider.value;
     });
 
     // Send updated AFK timeout to the server
@@ -36,11 +37,13 @@ document.addEventListener('DOMContentLoaded', function () {
             console.log("[DEBUG] Connected to WebSocket server from popup.js.");
             statusElement.textContent = 'Server connected.';
             statusElement.style.color = 'green';
+            downloadSection.style.display = 'none';
 
-            // Send the current presence mode on connection
-            chrome.storage.sync.get(['presenceEnabled'], (result) => {
+            // Send the current presence mode and AFK timeout on connection
+            chrome.storage.sync.get(['presenceEnabled', 'afkTimeout'], (result) => {
                 const statusMessage = result.presenceEnabled ? { type: 'status', status: 'telling' } : { type: 'status', status: 'notTelling' };
                 sendToServer(statusMessage);
+                sendToServer({ type: 'afkTimeoutUpdate', timeout: result.afkTimeout ?? 10 });
             });
         };
 
@@ -48,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function () {
             console.error(`[DEBUG] WebSocket Error: ${error}`);
             statusElement.textContent = 'Server not found.';
             statusElement.style.color = 'red';
-            document.getElementById('downloadSection').style.display = 'block';
+            downloadSection.style.display = 'block';
         };
 
         socket.onclose = function () {
