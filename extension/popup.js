@@ -1,107 +1,87 @@
 document.addEventListener('DOMContentLoaded', function () {
     const presenceToggle = document.getElementById('presenceToggle');
+    const afkTimeoutSlider = document.getElementById('afkTimeout');
+    const afkValueSpan = document.getElementById('afkValue');
+    const saveButton = document.getElementById('saveButton');
     const statusElement = document.getElementById('status');
-    const downloadSection = document.getElementById('downloadSection');
-    const verifyButton = document.getElementById('verifyButton'); // "Verify Installation" button
-    let socket = null; // WebSocket variable
-    const connectionTimeout = 5000; // Time in ms to wait before showing download link if no connection
+    let socket = null;
 
-    // Load saved toggle state for presence
-    chrome.storage.sync.get(['presenceEnabled'], (result) => {
-        presenceToggle.checked = result.presenceEnabled ?? true; // Default to true (on)
+    // Load saved presence toggle state and AFK timeout value
+    chrome.storage.sync.get(['presenceEnabled', 'afkTimeout'], (result) => {
+        presenceToggle.checked = result.presenceEnabled ?? true;
+        afkTimeoutSlider.value = result.afkTimeout ?? 10;  // Default to 10 minutes
+        afkValueSpan.textContent = afkTimeoutSlider.value;  // Display current slider value
     });
 
-    // Show download section if no server connection is established within timeout
-    function showDownloadSection() {
-        if (socket && socket.readyState !== WebSocket.OPEN) {
-            statusElement.textContent = 'Server not found.';
-            downloadSection.style.display = 'block';
-        }
-    }
+    // Update displayed AFK timeout value in real time
+    afkTimeoutSlider.addEventListener('input', () => {
+        afkValueSpan.textContent = afkTimeoutSlider.value; // Update the displayed value in minutes
+    });
 
-    // Send updates to the server based on toggle status
+    // Send updated AFK timeout to the server
     function sendToServer(payload) {
         if (socket && socket.readyState === WebSocket.OPEN) {
-            chrome.storage.sync.get(['presenceEnabled'], (result) => {
-                if (result.presenceEnabled) {
-                    socket.send(JSON.stringify(payload));
-                } else {
-                    socket.send(JSON.stringify({ type: 'mapUpdate', mapOrBuildingName: 'Not Telling' }));
-                }
-            });
+            socket.send(JSON.stringify(payload));
+            console.log('[DEBUG] Sent payload to server:', payload);
+        } else {
+            console.log('[DEBUG] Unable to send message, server not connected.');
         }
     }
 
-    // Establish WebSocket connection and enforce "Not Telling" status if needed
+    // Establish WebSocket connection with a check for "Not Telling" status on connect
     function connectToServer() {
         socket = new WebSocket('ws://localhost:32345');
 
-        socket.onopen = function() {
+        socket.onopen = function () {
             console.log("[DEBUG] Connected to WebSocket server from popup.js.");
-            statusElement.textContent = 'Server connected.'; // Show connected status
-            downloadSection.style.display = 'none'; // Hide download section on connection
+            statusElement.textContent = 'Server connected.';
+            statusElement.style.color = 'green';
 
-            // Enforce "Not Telling" mode immediately on connection if enabled
+            // Send the current presence mode on connection
             chrome.storage.sync.get(['presenceEnabled'], (result) => {
-                if (!result.presenceEnabled) {
-                    sendToServer({ type: 'mapUpdate', mapOrBuildingName: 'Not Telling' });
-                }
+                const statusMessage = result.presenceEnabled ? { type: 'status', status: 'telling' } : { type: 'status', status: 'notTelling' };
+                sendToServer(statusMessage);
             });
         };
 
         socket.onerror = function (error) {
-            console.error(`[DEBUG] WebSocket Error from popup.js: ${error}`);
+            console.error(`[DEBUG] WebSocket Error: ${error}`);
             statusElement.textContent = 'Server not found.';
-            downloadSection.style.display = 'block';
+            statusElement.style.color = 'red';
+            document.getElementById('downloadSection').style.display = 'block';
         };
 
         socket.onclose = function () {
-            console.log("[DEBUG] WebSocket connection closed in popup.js.");
+            console.log("[DEBUG] WebSocket connection closed.");
             statusElement.textContent = 'Server disconnected.';
-            downloadSection.style.display = 'block';
+            statusElement.style.color = 'orange';
         };
     }
 
-    // Show download link if no connection is established within the timeout
-    setTimeout(showDownloadSection, connectionTimeout);
+    // Attempt reconnection on "Verify Installation" click
+    document.getElementById('verifyButton').addEventListener('click', () => {
+        connectToServer();
+    });
 
-    // Connect to the server initially
-    connectToServer();
-
-    // Handle presence toggle change and save it
+    // Handle presence toggle change and save state
     presenceToggle.addEventListener('change', () => {
         const enabled = presenceToggle.checked;
         chrome.storage.sync.set({ presenceEnabled: enabled });
 
-        // Update the server based on the new toggle state
-        if (enabled) {
-            chrome.storage.sync.get(['lastMapName'], (data) => {
-                sendToServer({ type: 'mapUpdate', mapOrBuildingName: data.lastMapName || 'Unknown Location' });
-            });
-        } else {
-            sendToServer({ type: 'mapUpdate', mapOrBuildingName: 'Not Telling' });
-        }
+        // Update server with current toggle state
+        const statusMessage = enabled ? { type: 'status', status: 'telling' } : { type: 'status', status: 'notTelling' };
+        sendToServer(statusMessage);
     });
 
-    // Handle "Verify Installation" button click to attempt reconnection
-    verifyButton.addEventListener('click', () => {
-        console.log("[DEBUG] Reconnecting to server upon 'Verify Installation' button click.");
-        statusElement.textContent = 'Rechecking for server connection...';
-
-        // Close the socket if it's open and reconnect
-        if (socket && socket.readyState !== WebSocket.CLOSED) {
-            socket.close();
-        }
-        connectToServer(); // Attempt to reconnect
+    // Save AFK timeout on button click
+    saveButton.addEventListener('click', () => {
+        const afkTimeoutValue = afkTimeoutSlider.value;
+        chrome.storage.sync.set({ afkTimeout: afkTimeoutValue }, () => {
+            console.log(`[DEBUG] AFK timeout saved: ${afkTimeoutValue} minutes`);
+            sendToServer({ type: 'afkTimeoutUpdate', timeout: afkTimeoutValue });
+        });
     });
 
-    // Filter map updates based on toggle status
-    window.addEventListener('message', (event) => {
-        if (event.data.type === 'mapUpdate') {
-            chrome.storage.sync.get(['presenceEnabled'], (result) => {
-                const mapOrBuildingName = result.presenceEnabled ? event.data.mapOrBuildingName : 'Not Telling';
-                sendToServer({ type: 'mapUpdate', mapOrBuildingName });
-            });
-        }
-    });
+    // Establish initial server connection
+    connectToServer();
 });
