@@ -1,6 +1,6 @@
 {
   "name": "pixels-rpc-server",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Discord-rpc for Pixels Online",
   "main": "src/main.js",
   "scripts": {

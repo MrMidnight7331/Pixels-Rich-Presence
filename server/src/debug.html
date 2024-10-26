@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Pixels-RPC Debug Window</title>
+  <link rel="stylesheet" href="debug.css">
+</head>
+<body>
+<h2>Debug Logs</h2>
+<div id="logs"></div>
+
+<script>
+  const { ipcRenderer } = require('electron');
+  const logsDiv = document.getElementById('logs');
+
+  ipcRenderer.on('logMessage', (event, message) => {
+    const newLog = document.createElement('p');
+    newLog.textContent = message;
+    logsDiv.appendChild(newLog);
+    logsDiv.scrollTop = logsDiv.scrollHeight;  // Scroll to the bottom of the #logs div
+  });
+</script>
+</body>
+</html>

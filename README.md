@@ -1,6 +1,7 @@
 # **Pixels Rich Presence**
-> Server Version 1.0.2
-> Client Version 1.0.2
+> Server Version 1.0.3
+> 
+> Client Version 1.0.3
 
 **Pixels Rich Presence** is an Electron-based application that allows users to display real-time information about their activities in the *Pixels Game* on their Discord profile. The app integrates with Discord Rich Presence to show specific map locations, events, and in-game actions such as warping, farming, and exploring.
 
@@ -43,6 +44,13 @@ By committing to this repository, you agree to the terms and conditions outlined
 
   
 ## **Changelog**
+- V.1.0.3
+  - Improved WebSocket reconnection handling for better server stability
+  - Enhanced "Not Telling" mode toggle to consistently maintain status across sessions
+  - Fixed persistent connection issues on system reboot and startup
+  - Resolved UI issues for "Checking for server connection" message
+  - Added DEBUG window for the server 
+  - Added retry connection button for the server
 
 - V.1.0.2
   - Added more map descriptions
