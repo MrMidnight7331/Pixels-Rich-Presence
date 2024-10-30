@@ -30,7 +30,7 @@ function startWebSocketServer() {
 
     wss.on('connection', (ws) => {
         console.log('WebSocket connection established.');
-        sendInitialAfkTimer(ws);
+        sendInitialAfkTimer(ws);  // Send the current AFK timer setting on connection
         startHeartbeatMonitoring(ws);
         initialUpdateSent = false; // Reset for each new connection
 
@@ -46,15 +46,17 @@ function startWebSocketServer() {
                 afkTimeout = data.timeout * 60000;
                 console.log(`[DEBUG] AFK timeout updated to ${data.timeout} minutes (${afkTimeout} ms)`);
             } else if (data.type === 'heartbeat') {
-                missedHeartbeats = 0; // Reset missed heartbeats on receiving a heartbeat
+                missedHeartbeats = 0;  // Reset missed heartbeats on receiving a heartbeat
             }
         });
 
         ws.on('close', () => {
             console.log('WebSocket connection closed.');
             stopHeartbeatMonitoring();
+            resetAfkTimer();  // Clear the AFK timer on connection close
             clearDiscordPresence();
             startTime = null; // Reset startTime on disconnection
+            initialUpdateSent = false; // Ensure reinitialization on reconnection
         });
 
         ws.on('error', (error) => {
@@ -79,11 +81,12 @@ function startHeartbeatMonitoring(ws) {
             console.log('[DEBUG] No heartbeat detected. Clearing Discord presence.');
             clearDiscordPresence();
             stopHeartbeatMonitoring();
+            resetAfkTimer();  // Ensure AFK timer is cleared
             startTime = null;
         }
     }, HEARTBEAT_INTERVAL);
 
-    ws.send(JSON.stringify({ type: 'heartbeatCheck' }));
+    ws.send(JSON.stringify({ type: 'heartbeatCheck' }));  // Prompt client to start sending heartbeats
 }
 
 function stopHeartbeatMonitoring() {
@@ -113,6 +116,7 @@ function handleStatusUpdate(status, ws) {
     } else if (status === 'closed') {
         console.log('[DEBUG] Client status is closed, clearing Discord presence.');
         clearDiscordPresence();
+        resetAfkTimer();  // Ensure AFK timer is cleared on close
         startTime = null;
     }
 }
@@ -141,8 +145,8 @@ function resetAfkTimer() {
     if (afkTimer) {
         clearTimeout(afkTimer);
         afkTimer = null;
+        isAFK = false;
     }
-    isAFK = false;
 }
 
 function startAfkTimer(mapOrBuildingName) {
