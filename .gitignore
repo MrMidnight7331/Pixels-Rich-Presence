@@ -34,3 +34,4 @@ electron-builder-cache/
 *.app
 *.deb
 *.rpm
+*.zip

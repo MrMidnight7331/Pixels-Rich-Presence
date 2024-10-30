@@ -28,3 +28,29 @@ h2 {
     line-height: 1.4;
     margin: 0 20px 20px 20px; /* Consistent spacing */
 }
+
+h2 {
+    color: #2e4c2a;
+    font-size: 24px;
+    text-align: center;
+    margin: 15px 0;
+    position: relative; /* To position the button within the title */
+}
+
+#clearLogsButton {
+    position: absolute;
+    right: 20px;
+    top: 0;
+    background-color: #6abe00; /* Green button color */
+    color: #ffffff;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+#clearLogsButton:hover {
+    background-color: #4a9a00; /* Darker green on hover */
+}
+

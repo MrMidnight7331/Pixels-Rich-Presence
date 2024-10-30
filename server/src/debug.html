@@ -6,18 +6,27 @@
   <link rel="stylesheet" href="debug.css">
 </head>
 <body>
-<h2>Debug Logs</h2>
+<h2>Debug Logs
+  <button id="clearLogsButton" title="Clear Logs">Clear Logs</button>
+</h2>
 <div id="logs"></div>
 
 <script>
   const { ipcRenderer } = require('electron');
   const logsDiv = document.getElementById('logs');
+  const clearLogsButton = document.getElementById('clearLogsButton');
 
   ipcRenderer.on('logMessage', (event, message) => {
     const newLog = document.createElement('p');
     newLog.textContent = message;
     logsDiv.appendChild(newLog);
     logsDiv.scrollTop = logsDiv.scrollHeight;  // Scroll to the bottom of the #logs div
+  });
+
+  // Clear logs when the button is clicked
+  clearLogsButton.addEventListener('click', () => {
+    logsDiv.innerHTML = '';  // Clear the content of the logs div
+    ipcRenderer.send('clearLogs');  // Optional: Inform the main process if you want to reset logs there as well
   });
 </script>
 </body>

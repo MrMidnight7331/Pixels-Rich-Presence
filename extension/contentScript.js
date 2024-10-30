@@ -51,6 +51,18 @@ chrome.storage.onChanged.addListener((changes) => {
 window.addEventListener('message', function(event) {
     if (event.data.type === 'mapNameDetected') {
         // Save the detected map name to chrome storage
-        chrome.storage.sync.set({ lastMapName: event.data.mapName });
+        // Attempt to store the last map name with error handling
+        try {
+            chrome.storage.sync.set({ lastMapName: event.data.mapName }, () => {
+                if (chrome.runtime.lastError) {
+                    console.error(`[ERROR] Failed to save map name in Chrome storage: ${chrome.runtime.lastError.message}`);
+                } else {
+                    console.log(`[DEBUG] Successfully saved map name: ${event.data.mapName}`);
+                }
+            });
+        } catch (error) {
+            console.error(`[ERROR] Failed to access Chrome storage: ${error.message}`);
+        }
+
     }
 });

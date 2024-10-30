@@ -78,5 +78,9 @@
     "hauntedcastle": {
         "name": "Haunted Castle Premise",
         "description": "In front of the Haunted Castle"
-    }
+    },
+  "ShorelimeBeach": {
+    "name": "Shorelime Beach",
+    "description": "Chilling at the ShoreLimeBeach"
+  }
 }

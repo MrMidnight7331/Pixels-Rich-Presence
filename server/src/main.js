@@ -1,7 +1,7 @@
 const { app, Tray, Menu, BrowserWindow } = require('electron');
 const fs = require('fs');
 const path = require('path');
-const { updateDiscordPresence, clearDiscordPresence, connectToDiscord, client } = require('./discord');
+const { updateDiscordPresence, clearDiscordPresence, connectToDiscord } = require('./discord');
 require('./server');  // Start the WebSocket server
 
 let tray = null;
@@ -41,20 +41,42 @@ function updateTrayTitle() {
     tray.setToolTip(`Pixels Rich Presence Server - ${title}`);
 }
 
-// Retry Discord connection function
-function retryDiscordConnection() {
-    logDebug('[DEBUG] Attempting to reconnect to Discord...');
-    connectToDiscord()
+// Forcefully close the application and all child processes
+function handleExit() {
+    logDebug('[DEBUG] Exiting the application.');
+
+    // Ensure presence is cleared before exit
+    Promise.resolve()
+        .then(() => clearDiscordPresence())  // Clear Discord presence
         .then(() => {
-            isConnectedToDiscord = true;
-            logDebug('Successfully reconnected to Discord.');
-            updateTrayTitle();
+            if (global.wss) {
+                return new Promise((resolve) => {
+                    global.wss.close(() => {
+                        logDebug('[DEBUG] WebSocket server closed.');
+                        resolve();
+                    });
+                });
+            }
         })
-        .catch((error) => {
-            logDebug(`Failed to reconnect to Discord: ${error.message}`);
-            setTimeout(retryDiscordConnection, RETRY_INTERVAL);
+        .finally(() => {
+            app.quit();  // Quit the app once everything is closed
+            process.exit(0);  // Ensure all processes are terminated
         });
 }
+
+// Retry Discord connection function with reset check
+function retryDiscordConnection() {
+    logDebug('[DEBUG] Forcing a Discord reconnection...');
+    connectToDiscord().then(() => {
+        isConnectedToDiscord = true;
+        logDebug('Successfully reconnected to Discord.');
+        updateTrayTitle();
+    }).catch((error) => {
+        logDebug(`Failed to reconnect to Discord: ${error.message}`);
+        setTimeout(retryDiscordConnection, RETRY_INTERVAL);  // Retry with delay
+    });
+}
+
 
 // Override console methods to capture logs for debug window
 console.log = (...args) => logDebug(args.join(' '));
@@ -78,17 +100,6 @@ function createDebugWindow() {
         e.preventDefault();
         debugWindow.hide();
     });
-}
-
-// Handle application cleanup and exit
-function handleExit() {
-    if (global.wss) {
-        global.wss.close();  // Close WebSocket server
-    }
-
-    // Terminate any ongoing processes and close the application entirely
-    app.quit();
-    process.exit(0);  // Ensure all processes are killed
 }
 
 // Initialize Electron app with tray icon and context menu

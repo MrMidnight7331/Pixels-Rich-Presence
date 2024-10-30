@@ -3,66 +3,78 @@ const fs = require('fs');
 const path = require('path');
 const clientId = '1295301788311883876';
 
-const client = new RPC.Client({ transport: 'ipc' });
-
-const INITIAL_RETRY_DELAY = 5000;   // Retry every 5 seconds initially
-let retryDelay = INITIAL_RETRY_DELAY;
+let client;
 let reconnecting = false;
+let startTime = null;
+const RETRY_DELAY = 5000;
+let reconnectInProgress = false;
 
-// Log errors to a file
 function logError(message) {
     const logPath = path.join(__dirname, 'error.log');
     fs.appendFileSync(logPath, `[${new Date().toISOString()}] ${message}\n`);
 }
 
-// Attempt to connect to Discord
-async function connectToDiscord() {
-    try {
-        await client.login({ clientId });
-        console.log('Connected to Discord!');
+// Initialize the Discord RPC client
+function initializeDiscordClient() {
+    client = new RPC.Client({ transport: 'ipc' });
+
+    client.on('ready', () => {
+        console.log('[DEBUG] Discord RPC Ready');
         reconnecting = false;
-        retryDelay = INITIAL_RETRY_DELAY;  // Reset delay after successful connection
+        reconnectInProgress = false;
+    });
+
+    client.on('disconnected', () => {
+        console.log('[DEBUG] Discord disconnected.');
+        retryConnection();
+    });
+
+    client.on('error', (error) => {
+        logError(`Discord RPC Error: ${error.message}`);
+        retryConnection();
+    });
+}
+
+// Connect to Discord
+async function connectToDiscord() {
+    if (reconnectInProgress) return;
+    reconnectInProgress = true;
+
+    if (client) {
+        console.log('[DEBUG] Destroying existing Discord client for reinitialization.');
+        await client.destroy().catch((error) => logError(`Error destroying client: ${error.message}`));
+    }
+
+    initializeDiscordClient();
+
+    try {
+        console.log('[DEBUG] Attempting to connect to Discord...');
+        await client.login({ clientId });
+        console.log('[DEBUG] Connected to Discord!');
     } catch (error) {
-        logError(`Discord Connection Error: ${error.message}`);
-        retryConnection(); // Retry on failure
+        logError(`[DEBUG] Discord Connection Error: ${error.message}`);
+        retryConnection();
+    } finally {
+        reconnectInProgress = false;
     }
 }
 
-// Retry connection with a consistent delay unless connection succeeds
+// Retry connection after a delay
 function retryConnection() {
-    if (reconnecting) return;
+    if (reconnecting || reconnectInProgress) return;
     reconnecting = true;
 
-    console.log(`[DEBUG] Attempting to reconnect to Discord in ${retryDelay / 1000} seconds...`);
+    console.log(`[DEBUG] Reconnecting to Discord in ${RETRY_DELAY / 1000} seconds...`);
     setTimeout(() => {
         reconnecting = false;
         connectToDiscord();
-    }, retryDelay);
+    }, RETRY_DELAY);
 }
-
-// Event listeners for Discord client
-client.on('ready', () => {
-    console.log('Discord RPC Ready');
-    retryDelay = INITIAL_RETRY_DELAY; // Reset retry delay on success
-});
-
-client.on('disconnected', () => {
-    console.log('[DEBUG] Discord disconnected.');
-    retryConnection();
-});
-
-client.on('error', (error) => {
-    logError(`Discord RPC Error: ${error.message}`);
-    retryConnection();
-});
-
-// Initial connection attempt
-connectToDiscord();
-
-let startTime = null;
 
 // Update Discord presence
 function updateDiscordPresence(mapOrBuildingName) {
+    if (!client || reconnectInProgress) return;
+
     if (!startTime) startTime = Math.floor(Date.now() / 1000);
 
     console.log(`[DEBUG] Updating Discord presence with description: ${mapOrBuildingName}`);
@@ -74,19 +86,25 @@ function updateDiscordPresence(mapOrBuildingName) {
         instance: false
     }).catch((error) => {
         logError(`Discord Presence Update Error: ${error.message}`);
-        retryConnection(); // Trigger reconnect on activity error
+        retryConnection();
     });
 }
 
 // Clear Discord presence
 function clearDiscordPresence() {
+    if (!client) return;
+
     client.clearActivity().then(() => {
         console.log('[DEBUG] Discord presence cleared.');
         startTime = null;
     }).catch((error) => {
         logError(`Failed to clear Discord presence: ${error.message}`);
-        retryConnection(); // Trigger reconnect on clear error
+        retryConnection();
     });
 }
+
+// Initial connection attempt
+initializeDiscordClient();
+connectToDiscord();
 
 module.exports = { updateDiscordPresence, clearDiscordPresence, connectToDiscord };
